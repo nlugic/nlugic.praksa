@@ -13,10 +13,10 @@ namespace ContactManager.Data
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ContactManagerDBEntities : DbContext
+    public partial class ContactManagerDBEntities1 : DbContext
     {
-        public ContactManagerDBEntities()
-            : base("name=ContactManagerDBEntities")
+        public ContactManagerDBEntities1()
+            : base("name=ContactManagerDBEntities1")
         {
         }
     

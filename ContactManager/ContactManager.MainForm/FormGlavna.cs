@@ -21,5 +21,10 @@ namespace ContactManager.MainForm
         {
 
         }
+
+        private void btnIzmeniKontakt_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

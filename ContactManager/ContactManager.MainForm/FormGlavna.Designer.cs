@@ -243,6 +243,7 @@
             this.btnIzmeniKontakt.TabIndex = 5;
             this.btnIzmeniKontakt.Text = "Izmeni Kontakt";
             this.btnIzmeniKontakt.UseVisualStyleBackColor = true;
+            this.btnIzmeniKontakt.Click += new System.EventHandler(this.btnIzmeniKontakt_Click);
             // 
             // lblBrojTelefona
             // 
