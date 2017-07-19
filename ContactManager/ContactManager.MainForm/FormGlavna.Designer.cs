@@ -94,6 +94,7 @@
             // tbIme
             // 
             this.tbIme.Location = new System.Drawing.Point(110, 61);
+            this.tbIme.MaxLength = 50;
             this.tbIme.Name = "tbIme";
             this.tbIme.Size = new System.Drawing.Size(155, 20);
             this.tbIme.TabIndex = 0;
@@ -101,6 +102,7 @@
             // tbPrezime
             // 
             this.tbPrezime.Location = new System.Drawing.Point(110, 92);
+            this.tbPrezime.MaxLength = 50;
             this.tbPrezime.Name = "tbPrezime";
             this.tbPrezime.Size = new System.Drawing.Size(155, 20);
             this.tbPrezime.TabIndex = 1;
@@ -108,6 +110,7 @@
             // tbAdresa
             // 
             this.tbAdresa.Location = new System.Drawing.Point(110, 124);
+            this.tbAdresa.MaxLength = 512;
             this.tbAdresa.Name = "tbAdresa";
             this.tbAdresa.Size = new System.Drawing.Size(155, 20);
             this.tbAdresa.TabIndex = 2;
@@ -257,6 +260,7 @@
             // tbBrojTelefona
             // 
             this.tbBrojTelefona.Location = new System.Drawing.Point(110, 157);
+            this.tbBrojTelefona.MaxLength = 20;
             this.tbBrojTelefona.Name = "tbBrojTelefona";
             this.tbBrojTelefona.Size = new System.Drawing.Size(155, 20);
             this.tbBrojTelefona.TabIndex = 10;
@@ -300,6 +304,7 @@
             // tbAdresaInfo
             // 
             this.tbAdresaInfo.Location = new System.Drawing.Point(122, 108);
+            this.tbAdresaInfo.MaxLength = 512;
             this.tbAdresaInfo.Name = "tbAdresaInfo";
             this.tbAdresaInfo.Size = new System.Drawing.Size(149, 20);
             this.tbAdresaInfo.TabIndex = 8;
@@ -307,6 +312,7 @@
             // tbPrezimeInfo
             // 
             this.tbPrezimeInfo.Location = new System.Drawing.Point(122, 79);
+            this.tbPrezimeInfo.MaxLength = 50;
             this.tbPrezimeInfo.Name = "tbPrezimeInfo";
             this.tbPrezimeInfo.Size = new System.Drawing.Size(149, 20);
             this.tbPrezimeInfo.TabIndex = 9;
@@ -314,6 +320,7 @@
             // tbImeInfo
             // 
             this.tbImeInfo.Location = new System.Drawing.Point(122, 55);
+            this.tbImeInfo.MaxLength = 50;
             this.tbImeInfo.Name = "tbImeInfo";
             this.tbImeInfo.Size = new System.Drawing.Size(149, 20);
             this.tbImeInfo.TabIndex = 10;
@@ -321,6 +328,7 @@
             // tbKontaktInfo
             // 
             this.tbKontaktInfo.Location = new System.Drawing.Point(122, 137);
+            this.tbKontaktInfo.MaxLength = 20;
             this.tbKontaktInfo.Name = "tbKontaktInfo";
             this.tbKontaktInfo.Size = new System.Drawing.Size(149, 20);
             this.tbKontaktInfo.TabIndex = 11;
@@ -329,6 +337,7 @@
             // 
             this.tbDatumInfo.Enabled = false;
             this.tbDatumInfo.Location = new System.Drawing.Point(122, 168);
+            this.tbDatumInfo.MaxLength = 20;
             this.tbDatumInfo.Name = "tbDatumInfo";
             this.tbDatumInfo.Size = new System.Drawing.Size(149, 20);
             this.tbDatumInfo.TabIndex = 12;

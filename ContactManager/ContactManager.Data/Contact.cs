@@ -19,8 +19,8 @@ namespace ContactManager.Data
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
-        public System.DateTime InsertDate { get; set; }
         public string PhoneNumber { get; set; }
+        public System.DateTime InsertDate { get; set; }
     
         public virtual ContactType ContactType { get; set; }
     }
