@@ -16,5 +16,10 @@ namespace ContactManager.MainForm
         {
             InitializeComponent();
         }
+
+        private void btnDodajKontakt_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

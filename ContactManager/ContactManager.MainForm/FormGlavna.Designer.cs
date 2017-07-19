@@ -40,7 +40,7 @@
             this.lblAdresa = new System.Windows.Forms.Label();
             this.btnDodajKontakt = new System.Windows.Forms.Button();
             this.gbPrikazIIzmena = new System.Windows.Forms.GroupBox();
-            this.lblTipInfo = new System.Windows.Forms.Label();
+            this.lblTipKontaktaInfo = new System.Windows.Forms.Label();
             this.lblImeInfo = new System.Windows.Forms.Label();
             this.lblPrezimeInfo = new System.Windows.Forms.Label();
             this.lblAdresaInfo = new System.Windows.Forms.Label();
@@ -49,6 +49,15 @@
             this.lblBrojTelefona = new System.Windows.Forms.Label();
             this.tbBrojTelefona = new System.Windows.Forms.TextBox();
             this.lblDodatoInfo = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.tbAdresaInfo = new System.Windows.Forms.TextBox();
+            this.tbPrezimeInfo = new System.Windows.Forms.TextBox();
+            this.tbImeInfo = new System.Windows.Forms.TextBox();
+            this.tbKontaktInfo = new System.Windows.Forms.TextBox();
+            this.tbDatumInfo = new System.Windows.Forms.TextBox();
+            this.cbTipKontaktaInfo = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKontakti)).BeginInit();
             this.gbKontroleDodaj.SuspendLayout();
             this.gbPrikazIIzmena.SuspendLayout();
@@ -56,12 +65,10 @@
             // 
             // dgvKontakti
             // 
-            this.dgvKontakti.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.dgvKontakti.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvKontakti.Location = new System.Drawing.Point(14, 17);
+            this.dgvKontakti.Location = new System.Drawing.Point(12, 17);
             this.dgvKontakti.Name = "dgvKontakti";
-            this.dgvKontakti.Size = new System.Drawing.Size(557, 531);
+            this.dgvKontakti.Size = new System.Drawing.Size(557, 534);
             this.dgvKontakti.TabIndex = 0;
             // 
             // gbKontroleDodaj
@@ -79,7 +86,7 @@
             this.gbKontroleDodaj.Controls.Add(this.tbIme);
             this.gbKontroleDodaj.Location = new System.Drawing.Point(581, 17);
             this.gbKontroleDodaj.Name = "gbKontroleDodaj";
-            this.gbKontroleDodaj.Size = new System.Drawing.Size(292, 248);
+            this.gbKontroleDodaj.Size = new System.Drawing.Size(292, 232);
             this.gbKontroleDodaj.TabIndex = 1;
             this.gbKontroleDodaj.TabStop = false;
             this.gbKontroleDodaj.Text = "Unos novog kontakta";
@@ -152,42 +159,49 @@
             // 
             // btnDodajKontakt
             // 
-            this.btnDodajKontakt.Location = new System.Drawing.Point(72, 196);
+            this.btnDodajKontakt.Location = new System.Drawing.Point(72, 183);
             this.btnDodajKontakt.Name = "btnDodajKontakt";
             this.btnDodajKontakt.Size = new System.Drawing.Size(130, 35);
             this.btnDodajKontakt.TabIndex = 8;
             this.btnDodajKontakt.Text = "Dodaj Kontakt";
             this.btnDodajKontakt.UseVisualStyleBackColor = true;
+            this.btnDodajKontakt.Click += new System.EventHandler(this.btnDodajKontakt_Click);
             // 
             // gbPrikazIIzmena
             // 
+            this.gbPrikazIIzmena.Controls.Add(this.cbTipKontaktaInfo);
+            this.gbPrikazIIzmena.Controls.Add(this.tbDatumInfo);
+            this.gbPrikazIIzmena.Controls.Add(this.tbKontaktInfo);
+            this.gbPrikazIIzmena.Controls.Add(this.tbImeInfo);
+            this.gbPrikazIIzmena.Controls.Add(this.tbPrezimeInfo);
+            this.gbPrikazIIzmena.Controls.Add(this.tbAdresaInfo);
             this.gbPrikazIIzmena.Controls.Add(this.lblDodatoInfo);
             this.gbPrikazIIzmena.Controls.Add(this.btnIzmeniKontakt);
             this.gbPrikazIIzmena.Controls.Add(this.lblKontaktInfo);
             this.gbPrikazIIzmena.Controls.Add(this.lblAdresaInfo);
             this.gbPrikazIIzmena.Controls.Add(this.lblPrezimeInfo);
             this.gbPrikazIIzmena.Controls.Add(this.lblImeInfo);
-            this.gbPrikazIIzmena.Controls.Add(this.lblTipInfo);
-            this.gbPrikazIIzmena.Location = new System.Drawing.Point(581, 284);
+            this.gbPrikazIIzmena.Controls.Add(this.lblTipKontaktaInfo);
+            this.gbPrikazIIzmena.Location = new System.Drawing.Point(581, 255);
             this.gbPrikazIIzmena.Name = "gbPrikazIIzmena";
-            this.gbPrikazIIzmena.Size = new System.Drawing.Size(291, 264);
+            this.gbPrikazIIzmena.Size = new System.Drawing.Size(291, 254);
             this.gbPrikazIIzmena.TabIndex = 2;
             this.gbPrikazIIzmena.TabStop = false;
             this.gbPrikazIIzmena.Text = "Izabrani Kontakt";
             // 
-            // lblTipInfo
+            // lblTipKontaktaInfo
             // 
-            this.lblTipInfo.AutoSize = true;
-            this.lblTipInfo.Location = new System.Drawing.Point(22, 31);
-            this.lblTipInfo.Name = "lblTipInfo";
-            this.lblTipInfo.Size = new System.Drawing.Size(71, 13);
-            this.lblTipInfo.TabIndex = 0;
-            this.lblTipInfo.Text = "Tip Kontakta:";
+            this.lblTipKontaktaInfo.AutoSize = true;
+            this.lblTipKontaktaInfo.Location = new System.Drawing.Point(18, 31);
+            this.lblTipKontaktaInfo.Name = "lblTipKontaktaInfo";
+            this.lblTipKontaktaInfo.Size = new System.Drawing.Size(71, 13);
+            this.lblTipKontaktaInfo.TabIndex = 0;
+            this.lblTipKontaktaInfo.Text = "Tip Kontakta:";
             // 
             // lblImeInfo
             // 
             this.lblImeInfo.AutoSize = true;
-            this.lblImeInfo.Location = new System.Drawing.Point(22, 58);
+            this.lblImeInfo.Location = new System.Drawing.Point(62, 58);
             this.lblImeInfo.Name = "lblImeInfo";
             this.lblImeInfo.Size = new System.Drawing.Size(27, 13);
             this.lblImeInfo.TabIndex = 1;
@@ -196,7 +210,7 @@
             // lblPrezimeInfo
             // 
             this.lblPrezimeInfo.AutoSize = true;
-            this.lblPrezimeInfo.Location = new System.Drawing.Point(22, 82);
+            this.lblPrezimeInfo.Location = new System.Drawing.Point(42, 82);
             this.lblPrezimeInfo.Name = "lblPrezimeInfo";
             this.lblPrezimeInfo.Size = new System.Drawing.Size(47, 13);
             this.lblPrezimeInfo.TabIndex = 2;
@@ -205,7 +219,7 @@
             // lblAdresaInfo
             // 
             this.lblAdresaInfo.AutoSize = true;
-            this.lblAdresaInfo.Location = new System.Drawing.Point(22, 111);
+            this.lblAdresaInfo.Location = new System.Drawing.Point(46, 111);
             this.lblAdresaInfo.Name = "lblAdresaInfo";
             this.lblAdresaInfo.Size = new System.Drawing.Size(43, 13);
             this.lblAdresaInfo.TabIndex = 3;
@@ -214,7 +228,7 @@
             // lblKontaktInfo
             // 
             this.lblKontaktInfo.AutoSize = true;
-            this.lblKontaktInfo.Location = new System.Drawing.Point(22, 140);
+            this.lblKontaktInfo.Location = new System.Drawing.Point(7, 140);
             this.lblKontaktInfo.Name = "lblKontaktInfo";
             this.lblKontaktInfo.Size = new System.Drawing.Size(82, 13);
             this.lblKontaktInfo.TabIndex = 4;
@@ -222,9 +236,10 @@
             // 
             // btnIzmeniKontakt
             // 
-            this.btnIzmeniKontakt.Location = new System.Drawing.Point(72, 207);
+            this.btnIzmeniKontakt.Enabled = false;
+            this.btnIzmeniKontakt.Location = new System.Drawing.Point(72, 203);
             this.btnIzmeniKontakt.Name = "btnIzmeniKontakt";
-            this.btnIzmeniKontakt.Size = new System.Drawing.Size(156, 39);
+            this.btnIzmeniKontakt.Size = new System.Drawing.Size(130, 39);
             this.btnIzmeniKontakt.TabIndex = 5;
             this.btnIzmeniKontakt.Text = "Izmeni Kontakt";
             this.btnIzmeniKontakt.UseVisualStyleBackColor = true;
@@ -248,17 +263,92 @@
             // lblDodatoInfo
             // 
             this.lblDodatoInfo.AutoSize = true;
-            this.lblDodatoInfo.Location = new System.Drawing.Point(22, 171);
+            this.lblDodatoInfo.Location = new System.Drawing.Point(7, 171);
             this.lblDodatoInfo.Name = "lblDodatoInfo";
             this.lblDodatoInfo.Size = new System.Drawing.Size(94, 13);
             this.lblDodatoInfo.TabIndex = 6;
             this.lblDodatoInfo.Text = "Datum dodavanja:";
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 562);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(884, 26);
+            this.panel1.TabIndex = 3;
+            // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(581, 515);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(144, 36);
+            this.btnImport.TabIndex = 4;
+            this.btnImport.Text = "Importuj iz fajla...";
+            this.btnImport.UseVisualStyleBackColor = true;
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(731, 515);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(141, 36);
+            this.btnExport.TabIndex = 5;
+            this.btnExport.Text = "Eksportuj u fajl...";
+            this.btnExport.UseVisualStyleBackColor = true;
+            // 
+            // tbAdresaInfo
+            // 
+            this.tbAdresaInfo.Location = new System.Drawing.Point(122, 108);
+            this.tbAdresaInfo.Name = "tbAdresaInfo";
+            this.tbAdresaInfo.Size = new System.Drawing.Size(149, 20);
+            this.tbAdresaInfo.TabIndex = 8;
+            // 
+            // tbPrezimeInfo
+            // 
+            this.tbPrezimeInfo.Location = new System.Drawing.Point(122, 79);
+            this.tbPrezimeInfo.Name = "tbPrezimeInfo";
+            this.tbPrezimeInfo.Size = new System.Drawing.Size(149, 20);
+            this.tbPrezimeInfo.TabIndex = 9;
+            // 
+            // tbImeInfo
+            // 
+            this.tbImeInfo.Location = new System.Drawing.Point(122, 55);
+            this.tbImeInfo.Name = "tbImeInfo";
+            this.tbImeInfo.Size = new System.Drawing.Size(149, 20);
+            this.tbImeInfo.TabIndex = 10;
+            // 
+            // tbKontaktInfo
+            // 
+            this.tbKontaktInfo.Location = new System.Drawing.Point(122, 137);
+            this.tbKontaktInfo.Name = "tbKontaktInfo";
+            this.tbKontaktInfo.Size = new System.Drawing.Size(149, 20);
+            this.tbKontaktInfo.TabIndex = 11;
+            // 
+            // tbDatumInfo
+            // 
+            this.tbDatumInfo.Enabled = false;
+            this.tbDatumInfo.Location = new System.Drawing.Point(122, 168);
+            this.tbDatumInfo.Name = "tbDatumInfo";
+            this.tbDatumInfo.Size = new System.Drawing.Size(149, 20);
+            this.tbDatumInfo.TabIndex = 12;
+            // 
+            // cbTipKontaktaInfo
+            // 
+            this.cbTipKontaktaInfo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTipKontaktaInfo.FormattingEnabled = true;
+            this.cbTipKontaktaInfo.Location = new System.Drawing.Point(122, 28);
+            this.cbTipKontaktaInfo.Name = "cbTipKontaktaInfo";
+            this.cbTipKontaktaInfo.Size = new System.Drawing.Size(149, 21);
+            this.cbTipKontaktaInfo.TabIndex = 13;
+            // 
             // FormGlavna
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 562);
+            this.ClientSize = new System.Drawing.Size(884, 588);
+            this.Controls.Add(this.btnExport);
+            this.Controls.Add(this.btnImport);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.gbPrikazIIzmena);
             this.Controls.Add(this.gbKontroleDodaj);
             this.Controls.Add(this.dgvKontakti);
@@ -296,7 +386,16 @@
         private System.Windows.Forms.Label lblAdresaInfo;
         private System.Windows.Forms.Label lblPrezimeInfo;
         private System.Windows.Forms.Label lblImeInfo;
-        private System.Windows.Forms.Label lblTipInfo;
+        private System.Windows.Forms.Label lblTipKontaktaInfo;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ComboBox cbTipKontaktaInfo;
+        private System.Windows.Forms.TextBox tbDatumInfo;
+        private System.Windows.Forms.TextBox tbKontaktInfo;
+        private System.Windows.Forms.TextBox tbImeInfo;
+        private System.Windows.Forms.TextBox tbPrezimeInfo;
+        private System.Windows.Forms.TextBox tbAdresaInfo;
+        private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button btnExport;
     }
 }
 
