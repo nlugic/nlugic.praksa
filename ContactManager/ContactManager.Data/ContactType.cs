@@ -25,5 +25,10 @@ namespace ContactManager.Data
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Contact> Contacts { get; set; }
+
+        public override string ToString()
+        {
+            return ContactTypeID + ". " + Caption; // trebalo bi da se lepo uklopi u combobox
+        }
     }
 }

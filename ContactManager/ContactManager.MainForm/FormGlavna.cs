@@ -21,44 +21,120 @@ namespace ContactManager.MainForm
         private void btnDodajKontakt_Click(object sender, EventArgs e)
         {
             if (ValidanUnosZaDodavanje())
-                using (var db = new ContactManagerDBEntities())
+                using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
                 {
-                    Contact zaDodavanje = new Contact { ContactTypeID = cbTipKontakta.SelectedIndex, // ne moze ovako
-                                                        FirstName = tbIme.Text,
-                                                        LastName = tbPrezime.Text,
-                                                        Address = tbAdresa.Text,
-                                                        PhoneNumber = tbBrojTelefona.Text,
+                    Contact zaDodavanje = new Contact { ContactTypeID = cbTipKontakta.SelectedIndex + 1, // ne moze ovako
+                                                        FirstName = tbIme.Text.Trim(' '),
+                                                        LastName = tbPrezime.Text.Trim(' '),
+                                                        Address = tbAdresa.Text.Trim(' '),
+                                                        PhoneNumber = tbBrojTelefona.Text.Trim(' '),
                                                         InsertDate = DateTime.Now };
-                    db.Contacts.Add(zaDodavanje);
-                    db.SaveChanges();
+                    baza.Contacts.Add(zaDodavanje);
+                    baza.SaveChanges();
                 }
         }
 
         private void btnIzmeniKontakt_Click(object sender, EventArgs e)
         {
             if (ValidanUnosZaIzmenu())
-                using (var db = new ContactManagerDBEntities())
+                using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
                 {
-                    Contact zaIzmenu = db.Contacts.Find(); // na osnovu kliknutog
+                    Contact zaIzmenu = baza.Contacts.Find(); // na osnovu kliknutog, treba da se doda id
 
-                    zaIzmenu.ContactTypeID = cbTipKontaktaInfo.SelectedIndex; // ne moze ovako
-                    zaIzmenu.FirstName = tbImeInfo.Text;
-                    zaIzmenu.LastName = tbPrezimeInfo.Text;
-                    zaIzmenu.Address = tbAdresaInfo.Text;
-                    zaIzmenu.PhoneNumber = tbKontaktInfo.Text;
+                    zaIzmenu.ContactTypeID = cbTipKontaktaInfo.SelectedIndex + 1; // ne moze ovako
+                    zaIzmenu.FirstName = tbImeInfo.Text.Trim(' ');
+                    zaIzmenu.LastName = tbPrezimeInfo.Text.Trim(' ');
+                    zaIzmenu.Address = tbAdresaInfo.Text.Trim(' ');
+                    zaIzmenu.PhoneNumber = tbBrojTelefonaInfo.Text.Trim(' ');
 
-                    db.SaveChanges();
+                    baza.SaveChanges();
                 }
+        }
+
+        private void btnObrisiKontakt_Click(object sender, EventArgs e)
+        {
+            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
+            {
+                Contact zaBrisanje = baza.Contacts.Find(); // na osnovu kliknutog, treba da se doda id
+
+                baza.Contacts.Remove(zaBrisanje);
+                baza.SaveChanges();
+            }
         }
 
         private bool ValidanUnosZaDodavanje()
         {
-            return false; // da ne kenja
+            if (cbTipKontakta.SelectedIndex == -1)
+            {
+                IspisiPorukuGreske("Morate odabrati tip kontakta!");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbIme.Text))
+            {
+                IspisiPorukuGreske("Ime mora biti prisutno!");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbBrojTelefona.Text))
+            {
+                IspisiPorukuGreske("Broj telefona mora biti prisutan u odgovarajućem formatu!");
+                return false;
+            }
+
+            return true;
         }
 
         private bool ValidanUnosZaIzmenu()
         {
-            return false; // da ne kenja
+            if (string.IsNullOrWhiteSpace(tbImeInfo.Text))
+            {
+                IspisiPorukuGreske("Ime mora biti prisutno!");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbBrojTelefonaInfo.Text))
+            {
+                IspisiPorukuGreske("Broj telefona mora biti prisutan u odgovarajućem formatu!");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void IspisiPorukuUputstva(string poruka)
+        {
+            IspisiPoruku(poruka, false);
+            pPoruka.BackColor = Color.DarkSeaGreen;
+        }
+
+        private void IspisiPorukuObavestenja(string poruka)
+        {
+            IspisiPoruku(poruka);
+            pPoruka.BackColor = Color.CornflowerBlue;
+        }
+
+        private void IspisiPorukuGreske(string poruka)
+        {
+            IspisiPoruku(poruka);
+            pPoruka.BackColor = Color.IndianRed;
+        }
+
+        private void IspisiPoruku(string poruka, bool ogranicenPrikaz = true)
+        {
+            lblPoruka.Text = poruka;
+            tmPoruka.Enabled = ogranicenPrikaz;
+        }
+
+        private void tmPoruka_Tick(object sender, EventArgs e)
+        {
+            lblPoruka.Text = string.Empty;
+            tmPoruka.Enabled = false;
+        }
+
+        private void FormGlavna_Load(object sender, EventArgs e)
+        {
+            IspisiPorukuObavestenja("Dobrodišli u Contact Manager!");
         }
 
     }
