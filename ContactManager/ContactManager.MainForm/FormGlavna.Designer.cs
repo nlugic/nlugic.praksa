@@ -133,6 +133,7 @@
             // 
             // btnDodajKontakt
             // 
+            this.btnDodajKontakt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDodajKontakt.Location = new System.Drawing.Point(80, 170);
             this.btnDodajKontakt.Name = "btnDodajKontakt";
             this.btnDodajKontakt.Size = new System.Drawing.Size(130, 35);
@@ -304,6 +305,7 @@
             // btnIzmeniKontakt
             // 
             this.btnIzmeniKontakt.Enabled = false;
+            this.btnIzmeniKontakt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnIzmeniKontakt.Location = new System.Drawing.Point(80, 200);
             this.btnIzmeniKontakt.Name = "btnIzmeniKontakt";
             this.btnIzmeniKontakt.Size = new System.Drawing.Size(130, 35);
@@ -361,6 +363,7 @@
             // 
             this.lblPoruka.BackColor = System.Drawing.Color.Transparent;
             this.lblPoruka.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblPoruka.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPoruka.Location = new System.Drawing.Point(0, 0);
             this.lblPoruka.Name = "lblPoruka";
             this.lblPoruka.Size = new System.Drawing.Size(884, 26);
@@ -369,22 +372,26 @@
             // 
             // btnImport
             // 
+            this.btnImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnImport.Location = new System.Drawing.Point(160, 485);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(140, 30);
             this.btnImport.TabIndex = 3;
             this.btnImport.Text = "Importuj iz fajla...";
             this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // btnExport
             // 
             this.btnExport.Enabled = false;
+            this.btnExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExport.Location = new System.Drawing.Point(160, 520);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(140, 30);
             this.btnExport.TabIndex = 4;
             this.btnExport.Text = "Eksportuj u fajl...";
             this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // tmPoruka
             // 
@@ -394,6 +401,7 @@
             // btnObrisiKontakt
             // 
             this.btnObrisiKontakt.Enabled = false;
+            this.btnObrisiKontakt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnObrisiKontakt.Location = new System.Drawing.Point(20, 500);
             this.btnObrisiKontakt.Name = "btnObrisiKontakt";
             this.btnObrisiKontakt.Size = new System.Drawing.Size(110, 40);
@@ -437,6 +445,7 @@
             this.Text = "Contact Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGlavna_FormClosing);
             this.Load += new System.EventHandler(this.FormGlavna_Load);
+            this.Shown += new System.EventHandler(this.FormGlavna_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dgvKontakti)).EndInit();
             this.gbKontroleDodaj.ResumeLayout(false);
             this.gbKontroleDodaj.PerformLayout();
