@@ -48,52 +48,56 @@ namespace ContactManager.MainForm
 
         private void btnDodajKontakt_Click(object sender, EventArgs e)
         {
-            if (ValidanUnosZaDodavanje())
-                using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
+            if (!ValidanUnosZaDodavanje())
+                return;
+
+            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
+            {
+                ContactType tip = cbTipKontakta.SelectedItem as ContactType;
+                baza.ContactTypes.Attach(tip);
+
+                Contact zaDodavanje = new Contact
                 {
-                    ContactType tip = cbTipKontakta.SelectedItem as ContactType;
-                    baza.ContactTypes.Attach(tip);
+                    FirstName = PrvoSlovoVeliko(tbIme.Text.Trim(' ')),
+                    LastName = PrvoSlovoVeliko(tbPrezime.Text.Trim(' ')),
+                    Address = tbAdresa.Text.Trim(' '),
+                    PhoneNumber = tbBrojTelefona.Text.Trim(' '),
+                    InsertDate = DateTime.Now
+                };
 
-                    Contact zaDodavanje = new Contact
-                    {
-                        FirstName = PrvoSlovoVeliko(tbIme.Text.Trim(' ')),
-                        LastName = PrvoSlovoVeliko(tbPrezime.Text.Trim(' ')),
-                        Address = tbAdresa.Text.Trim(' '),
-                        PhoneNumber = tbBrojTelefona.Text.Trim(' '),
-                        InsertDate = DateTime.Now
-                    };
+                tip.Contacts.Add(zaDodavanje);
+                baza.SaveChanges();
+                IspisiPorukuObavestenja("Kontakt je uspešno dodat!");
+            }
 
-                    tip.Contacts.Add(zaDodavanje);
-                    baza.SaveChanges();
-                    IspisiPorukuObavestenja("Kontakt je uspešno dodat!");
-                }
             UcitajPodatke();
             ResetujKontroleZaDodavanje();
         }
 
         private void btnIzmeniKontakt_Click(object sender, EventArgs e)
         {
-            if (ValidanUnosZaIzmenu())
+            if (!ValidanUnosZaIzmenu())
+                return;
+
+            Contact zaIzmenu = (Contact)dgvKontakti.CurrentRow.DataBoundItem;
+
+            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
             {
-                Contact zaIzmenu = (Contact)dgvKontakti.CurrentRow.DataBoundItem;
+                baza.Contacts.Attach(zaIzmenu);
 
-                using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
-                {
-                    baza.Contacts.Attach(zaIzmenu);
-                    
-                    ContactType tip = cbTipKontaktaInfo.SelectedItem as ContactType;
-                    baza.ContactTypes.Attach(tip);
+                ContactType tip = cbTipKontaktaInfo.SelectedItem as ContactType;
+                baza.ContactTypes.Attach(tip);
 
-                    zaIzmenu.FirstName = PrvoSlovoVeliko(tbImeInfo.Text.Trim(' '));
-                    zaIzmenu.LastName = PrvoSlovoVeliko(tbPrezimeInfo.Text.Trim(' '));
-                    zaIzmenu.Address = tbAdresaInfo.Text.Trim(' ');
-                    zaIzmenu.PhoneNumber = tbBrojTelefonaInfo.Text.Trim(' ');
-                    zaIzmenu.ContactType = tip;
+                zaIzmenu.FirstName = PrvoSlovoVeliko(tbImeInfo.Text.Trim(' '));
+                zaIzmenu.LastName = PrvoSlovoVeliko(tbPrezimeInfo.Text.Trim(' '));
+                zaIzmenu.Address = tbAdresaInfo.Text.Trim(' ');
+                zaIzmenu.PhoneNumber = tbBrojTelefonaInfo.Text.Trim(' ');
+                zaIzmenu.ContactType = tip;
 
-                    baza.SaveChanges();
-                    IspisiPorukuObavestenja("Kontakt je uspešno izmenjen!");
-                }
+                baza.SaveChanges();
+                IspisiPorukuObavestenja("Kontakt je uspešno izmenjen!");
             }
+
             UcitajPodatke();
             ResetujKontroleZaIzmenu();
         }
@@ -102,10 +106,10 @@ namespace ContactManager.MainForm
         {
             BrisanjeKontakta();
         }
-
-        private void dgvKontakti_Click(object sender, EventArgs e)
+        
+        private void dgvKontakti_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvKontakti.RowCount > 0 && dgvKontakti.SelectedRows != null)
+            if (dgvKontakti.RowCount > 0 && dgvKontakti.SelectedRows != null) // PROVERITI!!!
             {
                 Contact zaPopunu = (Contact)dgvKontakti.CurrentRow.DataBoundItem;
 
@@ -126,45 +130,112 @@ namespace ContactManager.MainForm
                 ResetujKontroleZaIzmenu();
         }
 
-        private void btnImport_Click(object sender, EventArgs e)
+        #endregion
+
+        #region Pomocne metode
+
+        private void BrisanjeKontakta()
         {
-            IspisiPorukuUputstva("Odaberite datoteku iz koje želite da importujete kontakte.");
+            Contact zaBrisanje = (Contact)dgvKontakti.CurrentRow.DataBoundItem;
 
-            using (OpenFileDialog ofd = new OpenFileDialog())
+            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
             {
-                ofd.Title = "Importuj Kontakte";
-                ofd.Multiselect = false;
-                ofd.FileName = "import.txt";
-                ofd.Filter = "Text files (.txt)|*.txt|All files (*.*)|*.*";
+                baza.Contacts.Attach(zaBrisanje);
 
-                if (ofd.ShowDialog() == DialogResult.OK)
-                    if (ImportujKontakte(ofd.FileName))
-                    {
-                        IspisiPorukuObavestenja("Kontakti su uspešno importovani!");
-                        UcitajPodatke();
-                    }
-                    else
-                        IspisiPorukuGreske("Došlo je do greške prilikom importovanja kontakata!");
+                baza.Contacts.Remove(zaBrisanje);
+                baza.SaveChanges();
+                IspisiPorukuObavestenja("Kontakt je uspešno obrisan!");
+            }
+
+            UcitajPodatke();
+            ResetujKontroleZaIzmenu();
+        }
+
+        private void UcitajPodatke()
+        {
+            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
+            {
+                dgvKontakti.DataSource = (from c in baza.Contacts select c).ToList();
+
+                cbTipKontakta.DataSource = (from ct in baza.ContactTypes select ct).ToList();
+                cbTipKontaktaInfo.DataSource = (from ct in baza.ContactTypes select ct).ToList();
+
+                PodesiDGVICB();
             }
         }
 
-        private void btnExport_Click(object sender, EventArgs e)
+        private void PodesiDGVICB()
         {
-            IspisiPorukuUputstva("Odaberite datoteku u koju želite da eksportujete kontakte.");
+            dgvKontakti.Columns["ContactID"].Visible = false;
+            dgvKontakti.Columns["ContactTypeID"].Visible = false;
 
-            using (SaveFileDialog sfd = new SaveFileDialog())
-            {
-                sfd.Title = "Eksportuj Kontakte";
-                sfd.FileName = "eksport_" + DateTime.Now.ToString("ddMMyy") + ".txt";
-                sfd.Filter = "Text files (.txt)|*.txt|All files (*.*)|*.*";
+            dgvKontakti.Columns["FirstName"].HeaderText = "Ime";
+            dgvKontakti.Columns["LastName"].HeaderText = "Prezime";
+            dgvKontakti.Columns["Address"].HeaderText = "Adresa";
+            dgvKontakti.Columns["PhoneNumber"].HeaderText = "Broj telefona";
+            dgvKontakti.Columns["InsertDate"].HeaderText = "Upisan dana";
+            dgvKontakti.Columns["ContactType"].HeaderText = "Grupa";
 
-                if (sfd.ShowDialog() == DialogResult.OK)
-                    if (EksportujKontakte(sfd.FileName))
-                        IspisiPorukuObavestenja("Kontakti su uspešno eksportovani!");
-                    else
-                        IspisiPorukuGreske("Došlo je do greške prilikom eksportovanja kontakata!");
-            }
+            cbTipKontakta.DisplayMember = "Caption";
+            cbTipKontaktaInfo.DisplayMember = "Caption";
+
+            btnExport.Enabled = dgvKontakti.RowCount > 0;
         }
+
+        private void PopuniKontrole(Contact zaPopunu)
+        {
+            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
+            {
+                baza.Contacts.Attach(zaPopunu);
+                cbTipKontaktaInfo.SelectedItem = zaPopunu.ContactType;
+            }
+
+            cbTipKontaktaInfo.Enabled = true;
+            tbImeInfo.Text = zaPopunu.FirstName;
+            tbImeInfo.Enabled = true;
+            tbPrezimeInfo.Text = zaPopunu.LastName;
+            tbPrezimeInfo.Enabled = true;
+            tbAdresaInfo.Text = zaPopunu.Address;
+            tbAdresaInfo.Enabled = true;
+            tbBrojTelefonaInfo.Text = zaPopunu.PhoneNumber;
+            tbBrojTelefonaInfo.Enabled = true;
+            tbDatumInfo.Text = zaPopunu.InsertDate.ToString();
+            btnIzmeniKontakt.Enabled = true;
+            btnObrisiKontakt.Enabled = true;
+        }
+
+        private void ResetujKontroleZaDodavanje()
+        {
+            tbIme.Text = string.Empty;
+            tbPrezime.Text = string.Empty;
+            tbAdresa.Text = string.Empty;
+            tbBrojTelefona.Text = string.Empty;
+
+            dgvKontakti.ClearSelection();
+        }
+
+        private void ResetujKontroleZaIzmenu()
+        {
+            cbTipKontaktaInfo.Enabled = false;
+            tbImeInfo.Text = string.Empty;
+            tbImeInfo.Enabled = false;
+            tbPrezimeInfo.Text = string.Empty;
+            tbPrezimeInfo.Enabled = false;
+            tbAdresaInfo.Text = string.Empty;
+            tbAdresaInfo.Enabled = false;
+            tbBrojTelefonaInfo.Text = string.Empty;
+            tbBrojTelefonaInfo.Enabled = false;
+            tbDatumInfo.Text = string.Empty;
+
+            btnIzmeniKontakt.Enabled = false;
+            btnObrisiKontakt.Enabled = false;
+
+            dgvKontakti.ClearSelection();
+        }
+
+        #endregion
+
+        #region Validacija
 
         private void tbIme_Leave(object sender, EventArgs e)
         {
@@ -194,30 +265,6 @@ namespace ContactManager.MainForm
         private void tbBrojTelefonaInfo_Leave(object sender, EventArgs e)
         {
             ValidanFormatBrojaTelefona(sender as TextBox);
-        }
-
-        #endregion
-
-        #region Metode
-
-
-
-        #endregion
-
-        private void BrisanjeKontakta()
-        {
-            Contact zaBrisanje = (Contact)dgvKontakti.CurrentRow.DataBoundItem;
-
-            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
-            {
-                baza.Contacts.Attach(zaBrisanje);
-
-                baza.Contacts.Remove(zaBrisanje);
-                baza.SaveChanges();
-                IspisiPorukuObavestenja("Kontakt je uspešno obrisan!");
-            }
-            UcitajPodatke();
-            ResetujKontroleZaIzmenu();
         }
 
         private bool ValidanUnosZaDodavanje()
@@ -264,10 +311,35 @@ namespace ContactManager.MainForm
             return true;
         }
 
-        private void IspisiPorukuUputstva(string poruka)
+        public static string PrvoSlovoVeliko(string s)
         {
-            IspisiPoruku(poruka, false);
-            pPoruka.BackColor = Color.CornflowerBlue;
+            if (string.IsNullOrEmpty(s))
+                return string.Empty;
+
+            char[] charArray = s.ToCharArray();
+            charArray[0] = char.ToUpper(charArray[0]);
+
+            for (int i = 1; i < charArray.Length; i++)
+                charArray[i] = char.ToLower(charArray[i]);
+
+            return new string(charArray);
+        }
+
+        public static bool dobarTelefon(string brTel)
+        {
+            Regex brTelefona = new Regex(@"^((\+|00)\d{3})?[\s/-]?\d{2,3}[\s/-]?[\d\s/-]{7,14}$|^\d{10}$");
+            return brTelefona.Match(brTel).Success;
+        }
+
+        #endregion
+
+        #region Poruke
+
+        private void tmPoruka_Tick(object sender, EventArgs e)
+        {
+            lblPoruka.Text = string.Empty;
+            tmPoruka.Enabled = false;
+            pPoruka.BackColor = SystemColors.Control;
         }
 
         private void IspisiPorukuObavestenja(string poruka)
@@ -282,119 +354,60 @@ namespace ContactManager.MainForm
             pPoruka.BackColor = Color.IndianRed;
         }
 
+        private void IspisiPorukuUputstva(string poruka)
+        {
+            IspisiPoruku(poruka, false);
+            pPoruka.BackColor = Color.CornflowerBlue;
+        }
+
         private void IspisiPoruku(string poruka, bool ogranicenPrikaz = true)
         {
             lblPoruka.Text = poruka;
             tmPoruka.Enabled = ogranicenPrikaz;
         }
 
-        private void tmPoruka_Tick(object sender, EventArgs e)
+        #endregion
+
+        #region Import/Export
+
+        private void btnImport_Click(object sender, EventArgs e)
         {
-            lblPoruka.Text = string.Empty;
-            tmPoruka.Enabled = false;
-            pPoruka.BackColor = SystemColors.Control;
-        }
+            IspisiPorukuUputstva("Odaberite datoteku iz koje želite da importujete kontakte.");
 
-        public static string PrvoSlovoVeliko(string s)
-        {
-            if (string.IsNullOrEmpty(s))
-                return string.Empty;
-
-            char[] charArray = s.ToCharArray();
-            charArray[0] = char.ToUpper(charArray[0]);
-
-            for (int i = 1; i < charArray.Length; i++)
-                charArray[i] = char.ToLower(charArray[i]);
-            
-            return new string(charArray);
-        }
-
-        public static bool dobarTelefon(string brTel)
-        {
-            Regex brTelefona = new Regex(@"^((\+|00)\d{3})?[\s/-]?\d{2,3}[\s/-]?[\d\s/-]{7,14}$|^\d{10}$");
-            return brTelefona.Match(brTel).Success;
-        }
-
-        private void UcitajPodatke()
-        {
-            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
+            using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                dgvKontakti.DataSource = (from c in baza.Contacts select c).ToList();
+                ofd.Title = "Importuj Kontakte";
+                ofd.Multiselect = false;
+                ofd.FileName = "import.txt";
+                ofd.Filter = "Text files (.txt)|*.txt|All files (*.*)|*.*";
 
-                cbTipKontakta.DataSource = (from ct in baza.ContactTypes select ct).ToList();
-                cbTipKontaktaInfo.DataSource = (from ct in baza.ContactTypes select ct).ToList();
-
-                PodesiDGVICB();
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    if (ImportujKontakte(ofd.FileName))
+                    {
+                        IspisiPorukuObavestenja("Kontakti su uspešno importovani!");
+                        UcitajPodatke();
+                    }
+                    else
+                        IspisiPorukuGreske("Došlo je do greške prilikom importovanja kontakata!");
             }
         }
 
-        private void PodesiDGVICB()
+        private void btnExport_Click(object sender, EventArgs e)
         {
-            dgvKontakti.Columns["ContactID"].Visible = false;
-            dgvKontakti.Columns["ContactTypeID"].Visible = false;
+            IspisiPorukuUputstva("Odaberite datoteku u koju želite da eksportujete kontakte.");
 
-            dgvKontakti.Columns["FirstName"].HeaderText = "Ime";
-            dgvKontakti.Columns["LastName"].HeaderText = "Prezime";
-            dgvKontakti.Columns["Address"].HeaderText = "Adresa";
-            dgvKontakti.Columns["PhoneNumber"].HeaderText = "Broj telefona";
-            dgvKontakti.Columns["InsertDate"].HeaderText = "Upisan dana";
-            dgvKontakti.Columns["ContactType"].HeaderText = "Grupa";
-
-            cbTipKontakta.DisplayMember = "Caption";
-            cbTipKontaktaInfo.DisplayMember = "Caption";
-
-            btnExport.Enabled = dgvKontakti.RowCount > 0;
-        }
-
-        private void PopuniKontrole(Contact zaPopunu)
-        {
-            using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
+            using (SaveFileDialog sfd = new SaveFileDialog())
             {
-                baza.Contacts.Attach(zaPopunu);
+                sfd.Title = "Eksportuj Kontakte";
+                sfd.FileName = "eksport_" + DateTime.Now.ToString("ddMMyy") + ".txt";
+                sfd.Filter = "Text files (.txt)|*.txt|All files (*.*)|*.*";
 
-                cbTipKontaktaInfo.SelectedItem = zaPopunu.ContactType;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    if (EksportujKontakte(sfd.FileName))
+                        IspisiPorukuObavestenja("Kontakti su uspešno eksportovani!");
+                    else
+                        IspisiPorukuGreske("Došlo je do greške prilikom eksportovanja kontakata!");
             }
-            cbTipKontaktaInfo.Enabled = true;
-            tbImeInfo.Text = zaPopunu.FirstName;
-            tbImeInfo.Enabled = true;
-            tbPrezimeInfo.Text = zaPopunu.LastName;
-            tbPrezimeInfo.Enabled = true;
-            tbAdresaInfo.Text = zaPopunu.Address;
-            tbAdresaInfo.Enabled = true;
-            tbBrojTelefonaInfo.Text = zaPopunu.PhoneNumber;
-            tbBrojTelefonaInfo.Enabled = true;
-            tbDatumInfo.Text = zaPopunu.InsertDate.ToString();
-            btnIzmeniKontakt.Enabled = true;
-            btnObrisiKontakt.Enabled = true;
-        }
-
-        private void ResetujKontroleZaDodavanje()
-        {
-            tbIme.Text = string.Empty;
-            tbPrezime.Text = string.Empty;
-            tbAdresa.Text = string.Empty;
-            tbBrojTelefona.Text = string.Empty;
-
-            dgvKontakti.ClearSelection();
-        }
-
-        private void ResetujKontroleZaIzmenu()
-        {
-            cbTipKontaktaInfo.Enabled = false;
-            tbImeInfo.Text = string.Empty;
-            tbImeInfo.Enabled = false;
-            tbPrezimeInfo.Text = string.Empty;
-            tbPrezimeInfo.Enabled = false;
-            tbAdresaInfo.Text = string.Empty;
-            tbAdresaInfo.Enabled = false;
-            tbBrojTelefonaInfo.Text = string.Empty;
-            tbBrojTelefonaInfo.Enabled = false;
-            tbDatumInfo.Text = string.Empty;
-
-            btnIzmeniKontakt.Enabled = false;
-            btnObrisiKontakt.Enabled = false;
-
-            dgvKontakti.ClearSelection();
         }
 
         private bool ImportujKontakte(string fajl)
@@ -404,16 +417,17 @@ namespace ContactManager.MainForm
             try
             {
                 sr = new StreamReader(new FileStream(fajl, FileMode.Open));
+
                 using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
                 {
                     while (!sr.EndOfStream)
                     {
-                        string red = sr.ReadLine();
-                        string[] kolone = red.Split(';'); // ime;prezime;adresa;telefon;grupa;
-                        
+                        string[] kolone = sr.ReadLine().Split(';'); // ime;prezime;adresa;telefon;tip;
+
                         string cap = kolone[4];
                         ContactType tip = (from ct in baza.ContactTypes
-                                           where ct.Caption == cap select ct).FirstOrDefault() as ContactType;
+                                           where ct.Caption == cap
+                                           select ct).FirstOrDefault() as ContactType;
 
                         Contact zaDodavanje = new Contact
                         {
@@ -423,7 +437,7 @@ namespace ContactManager.MainForm
                             PhoneNumber = kolone[3].Trim(' '),
                             InsertDate = DateTime.Now
                         };
-                        
+
                         tip.Contacts.Add(zaDodavanje);
                         baza.SaveChanges();
                     }
@@ -452,12 +466,8 @@ namespace ContactManager.MainForm
                 using (ContactManagerDBEntities baza = new ContactManagerDBEntities())
                 {
                     foreach (Contact c in baza.Contacts)
-                    {
-                        string red = c.FirstName + ';' + c.LastName + ';' + c.Address + ';'
-                                        + c.PhoneNumber + ';' + c.ContactType.Caption + ';';
-
-                        sw.WriteLine(red);
-                    }
+                        sw.WriteLine(c.FirstName + ';' + c.LastName + ';' + c.Address + ';'
+                                        + c.PhoneNumber + ';' + c.ContactType.Caption + ';');
                 }
             }
             catch
@@ -471,6 +481,8 @@ namespace ContactManager.MainForm
             sw.Close();
             return true;
         }
+
+        #endregion
 
     }
 }

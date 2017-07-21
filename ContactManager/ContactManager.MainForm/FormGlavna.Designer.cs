@@ -89,8 +89,8 @@
             this.dgvKontakti.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvKontakti.Size = new System.Drawing.Size(560, 540);
             this.dgvKontakti.TabIndex = 0;
+            this.dgvKontakti.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvKontakti_CellClick);
             this.dgvKontakti.SelectionChanged += new System.EventHandler(this.dgvKontakti_SelectionChanged);
-            this.dgvKontakti.Click += new System.EventHandler(this.dgvKontakti_Click);
             this.dgvKontakti.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvKontakti_KeyDown);
             // 
             // gbKontroleDodaj
